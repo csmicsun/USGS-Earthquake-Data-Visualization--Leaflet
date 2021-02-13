@@ -1,5 +1,5 @@
 // Store API endpoint to  queryUrl
-var queryUrl = ""
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson"
 
 // Perform a GET request to the query URL
 d3.jsno(queryUrl, function(data) {
