@@ -21,7 +21,7 @@ d3.json(queryUrl, function(data) {
         return {
             opacity: 1,
             fillOpacity: 1,
-            fillColor: getColor(feature.properties.mag),
+            fillColor: getColor(feature.geometry.coordinates[2]),
             color: "#000000",
             radius: getRadius(feature.properties.mag),
             stroke: true,
@@ -29,11 +29,14 @@ d3.json(queryUrl, function(data) {
         };
     }
 
-    function getColor(mag) {
-        return mag > 5 ? "#ea2c2c" :
-               mag > 4 ? "#eaa92c" :
-               mag > 3 ? "#d5ea2c" :
-                         "#92ea2c";
+    // Color according to depth
+    function getColor(depth) {
+        return depth > 200 ? "#bd0026" :
+               depth > 150 ? "#f03b20" :
+            //    depth > 100 ? "#fd8d3c" :
+               depth > 50  ? "#feb24c" :
+                             "#fed976";
+                            //  "#ffffb2";
     }
     
     function getRadius(mag) {
@@ -71,10 +74,12 @@ d3.json(queryUrl, function(data) {
         geojson = L.geoJson();
 
     function onEachFeature(feature, layer) {
+        // Interaction layer
         layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight
         });
+        // The popup
         layer.bindPopup(`<h2>${feature.properties.place}</h2>
         <hr><p>Magnitude: ${feature.properties.mag}<br>${new Date(feature.properties.time)}</p>`); 
     }
@@ -96,8 +101,8 @@ d3.json(queryUrl, function(data) {
     
     legend.onAdd = function(myMap) {
         var div = L.DomUtil.create("div", "info legend"),
-            grades = [2, 3, 4, 5],
-            colors = ["#92ea2c", "#d5ea2c","#eaa92c", "#ea2c2c"];
+            grades = [1, 50, 150, 200],
+            colors = ["#fed976", "#feb24c", "#f03b20", "#bd0026"];
     
     
         // loop thry the intervals of colors to put it in the label
@@ -108,7 +113,7 @@ d3.json(queryUrl, function(data) {
         }
 
         return div;
-        
+
     };
     
     legend.addTo(myMap)
