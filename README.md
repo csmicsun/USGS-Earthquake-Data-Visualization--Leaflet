@@ -10,5 +10,5 @@ In this homework exercise, I will be practicing using leaflet to plot a map with
 
 - Create a legend that will provide context for your map data.
 
-
-
+In addition: I added the mouseover interactions to highlight the circle
+Also, I picked my color from ColorBrewer.
