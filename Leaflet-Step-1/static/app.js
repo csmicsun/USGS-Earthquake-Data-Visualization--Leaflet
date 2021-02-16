@@ -17,54 +17,99 @@ L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?acce
   
 // Grabbing our GeoJSON data..
 d3.json(queryUrl, function(data) {
-    function mapStyle(feature) {
+    function myStyle(feature) {
         return {
             opacity: 1,
             fillOpacity: 1,
-            fillColor: mapColor(feature.properties.mag),
+            fillColor: getColor(feature.properties.mag),
             color: "#000000",
-            radius: mapRadius(feature.properties.mag),
+            radius: getRadius(feature.properties.mag),
             stroke: true,
             weight: 0.5
         };
     }
 
-    function mapColor(mag) {
-        switch (true) {
-            case mag > 5:
-                return "#ea2c2c";
-            case mag > 4:
-                return "#eaa92c";
-            case mag > 3:
-                return "#d5ea2c";
-            case mag > 2:
-                return "#92ea2c";
-            case mag > 1:
-                return "#2ceabf";
-            default:
-                return "#2c99ea";
-        }
+    function getColor(mag) {
+        return mag > 5 ? "#ea2c2c" :
+               mag > 4 ? "#eaa92c" :
+               mag > 3 ? "#d5ea2c" :
+                         "#92ea2c";
+
     }
     
-    function mapRadius(mag) {
+    function getRadius(mag) {
         if (mag === 0) {
             return 1;
         }
-        return mag * 4;
+        return mag * 5;
     }
 
-    // Creating a geoJSON layer with the retrieved data
-    L.geoJson(data, {
+    // Add interaction
+    // Mouseover event listener: highlight
+    function highlightFeature(e) {
+        var layer = e.target;
+    
+        layer.setStyle({
+            weight: 3,
+            color: '#666',
+            dashArray: '',
+            fillOpacity: 1
+        });
+    
+        if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layer.bringToFront();
+        }
+    }
+
+    // Mouseout
+    function resetHighlight(e) {
+        geojson.resetStyle(e.target);
+    }
+
+    // Reset the layer
+    var geojson;
+        // ... our listeners // I don' know why but probably don't need ...
+        geojson = L.geoJson();
+
+    function onEachFeature(feature, layer) {
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight
+        });
+        layer.bindPopup(`<h2>${feature.properties.place}</h2>
+        <hr><p>Magnitude: ${feature.properties.mag}<br>${new Date(feature.properties.time)}</p>`); 
+    }
+
+    // Create a geoJSON layer with the retrieved data
+    geojson = L.geoJson(data, {
+
         pointToLayer: function(feature, latlng) {
             return L.circleMarker(latlng);
+
         },
       
-        style: mapStyle,
+        style: myStyle,
+        onEachFeature: onEachFeature
       
-        onEachFeature: function(feature, layer) {
-            layer.bindPopup(`<h2>${feature.properties.place}</h2>
-            <hr><p>Magnitude: ${feature.properties.mag}<br>${new Date(feature.properties.time)}</p>`);      
-        }
     }).addTo(myMap);
+
+    // Create a legend
+    var legend = L.control({position: "bottomright"});
+    
+    legend.onAdd = function(myMap) {
+        var div = L.DomUtil.create("div", "info legend"),
+            grades = [2, 3, 4, 5],
+            colors = ["#92ea2c", "#d5ea2c","#eaa92c", "#ea2c2c"];
+    
+    
+        // loop thry the intervals of colors to put it in the label
+        for (var i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                "<i style='background: " + colors[i] + "'></i> " +
+                grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+        }
+        return div;
+    };
+    
+    legend.addTo(myMap)
 });
-  
