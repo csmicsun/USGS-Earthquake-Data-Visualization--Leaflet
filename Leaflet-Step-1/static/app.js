@@ -34,7 +34,6 @@ d3.json(queryUrl, function(data) {
                mag > 4 ? "#eaa92c" :
                mag > 3 ? "#d5ea2c" :
                          "#92ea2c";
-
     }
     
     function getRadius(mag) {
@@ -85,7 +84,6 @@ d3.json(queryUrl, function(data) {
 
         pointToLayer: function(feature, latlng) {
             return L.circleMarker(latlng);
-
         },
       
         style: myStyle,
@@ -108,7 +106,9 @@ d3.json(queryUrl, function(data) {
                 "<i style='background: " + colors[i] + "'></i> " +
                 grades[i] + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
         }
+
         return div;
+        
     };
     
     legend.addTo(myMap)
