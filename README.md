@@ -9,6 +9,3 @@ This is a data visualization project using leaflet to plot a map with geojson da
 - Include popups that provide additional information about the earthquake when a marker is clicked.
 
 - Create a legend that will provide context for your map data.
-
-In addition: I added the mouseover interactions to highlight the circle
-Also, I picked my color from ColorBrewer.
