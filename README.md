@@ -1,6 +1,6 @@
 # Leaflet - Visualizing Data with Leaflet
 
-This is a data visualization project using leaflet to plot a map with geojson data acquired from USGS Earthquake Hazards Program. I chose the dataset for M2.5+ in the [Past 7 Days]. Up til when I finished the homework exercise, there were 412 feature counts, indicating the number of earthquakes that are M2.5+.
+This is a data visualization project using leaflet to plot a map with geojson data acquired from USGS Earthquake Hazards Program. 
 
 - Your data markers should reflect the magnitude of the earthquake by their size and and depth of the earth quake by color. Earthquakes with higher magnitudes should appear larger and earthquakes with greater depth should appear darker in color.
 
